@@ -1,11 +1,9 @@
-package com.jorgeyh7.app.presistence.entity;
+package com.jorgeyh7.app.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 @Getter

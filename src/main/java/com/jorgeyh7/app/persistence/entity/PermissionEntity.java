@@ -1,4 +1,4 @@
-package com.jorgeyh7.app.presistence.entity;
+package com.jorgeyh7.app.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

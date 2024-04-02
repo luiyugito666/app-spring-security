@@ -1,32 +1,38 @@
 package com.jorgeyh7.app.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @PreAuthorize("denyAll()")
 public class TestController {
-
-    @GetMapping("/hello")
-    @PreAuthorize("permitAll()")
-    public String hello(){
-
-        return "hello world";
-    }
-    @GetMapping("/hello-secured")
-    @PreAuthorize("hasAuthority('CREATE')")
-    public String helloSecured(){
-
-        return "hello world secured";
-    }
-    @GetMapping("/hello-secured2")
+    @GetMapping("/get")
     @PreAuthorize("hasAuthority('READ')")
-    public String helloSecured2(){
+    public String helloGet() {
+        return "welcome - GET";
+    }
 
-        return "hello world secured2";
+    @PostMapping("/post")
+    @PreAuthorize("hasAuthority('CREATE')"  )
+    public String helloPost() {
+        return "welcome - POST";
+    }
+
+    @PutMapping("/put")
+    public String helloPut() {
+        return "welcome - PUT";
+    }
+
+    @DeleteMapping("/delete")
+    public String helloDelete() {
+        return "welcome - DELETE";
+    }
+
+    @PatchMapping("/patch")
+    @PreAuthorize("hasAuthority('REFACTOR')")
+    public String helloPatch() {
+        return "welcome - PATCH";
     }
 
 

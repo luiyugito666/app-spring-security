@@ -1,10 +1,8 @@
 package com.jorgeyh7.app.config;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jorgeyh7.app.service.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,18 +11,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -40,8 +30,10 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http->{
-                        http.requestMatchers(HttpMethod.GET,"auth/hello").permitAll();
-                        http.requestMatchers(HttpMethod.GET, "auth/hello-secured").hasAuthority("CREATE");
+                        http.requestMatchers(HttpMethod.GET,"auth/get").permitAll();
+                        http.requestMatchers(HttpMethod.POST, "auth/post").hasAnyAuthority("CREATE","READ");
+                        http.requestMatchers(HttpMethod.PATCH, "auth/patch").hasAuthority("REFACTOR");
+                         http.requestMatchers(HttpMethod.PATCH, "auth/patch").hasRole("ADMIN");
                         http.anyRequest().denyAll();
                         })
                 .build();
@@ -64,19 +56,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailService);
         return provider;
     }
-    @Bean
+/*    @Bean
     public UserDetailsService userDetailsService() {
-        /*UserDetails userDetails= User.withUsername("jorge")
+        *//*UserDetails userDetails= User.withUsername("jorge")
                 .password("1234")
                 .roles("ADMIN")
                 .authorities("read","create")
-                .build();*/
+                .build();*//*
 
        List< UserDetails> userDetailsList= new ArrayList<>();
        userDetailsList.add( User.withUsername("jorge")
@@ -95,7 +87,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(userDetailsList);
 
 
-    }
+    }*/
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
