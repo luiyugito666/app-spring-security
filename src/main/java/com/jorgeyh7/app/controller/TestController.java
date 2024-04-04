@@ -1,20 +1,16 @@
 package com.jorgeyh7.app.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
-@PreAuthorize("denyAll()")
+@RequestMapping("/method")
 public class TestController {
     @GetMapping("/get")
-    @PreAuthorize("hasAuthority('READ')")
     public String helloGet() {
         return "welcome - GET";
     }
 
     @PostMapping("/post")
-    @PreAuthorize("hasAuthority('CREATE')"  )
     public String helloPost() {
         return "welcome - POST";
     }
@@ -30,8 +26,7 @@ public class TestController {
     }
 
     @PatchMapping("/patch")
-    @PreAuthorize("hasAuthority('REFACTOR')")
-    public String helloPatch() {
+      public String helloPatch() {
         return "welcome - PATCH";
     }
 
